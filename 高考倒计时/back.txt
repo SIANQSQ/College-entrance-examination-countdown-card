@@ -1,0 +1,92 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <iostream>
+#include<time.h>
+#include<graphics.h>
+
+using namespace std;
+
+int zX = 305;
+int zY = 205;
+IMAGE background;
+
+int standard_to_stamp(char* str_time)
+{
+	struct tm stm;
+	int iY, iM, iD, iH, iMin, iS;
+	memset(&stm, 0, sizeof(stm));
+	iY = atoi(str_time);
+	iM = atoi(str_time + 5);
+	iD = atoi(str_time + 8);
+	iH = atoi(str_time + 11);
+	iMin = atoi(str_time + 14);
+	iS = atoi(str_time + 17);
+	stm.tm_year = iY - 1900;
+	stm.tm_mon = iM - 1;
+	stm.tm_mday = iD;
+	stm.tm_hour = iH;
+	stm.tm_min = iMin;
+	stm.tm_sec = iS;
+	return (int)mktime(&stm);
+}
+
+int main()
+{
+	loadimage(&background, _T("BG.png"),290,175);
+	int pX = 625;//班级1625
+	int pY = 0;//班级-30
+	ExMessage msmsg;
+	time_t now_time = time(NULL);
+	struct tm t_tm;
+	localtime_s(&t_tm, &now_time);
+	int start_time = (int)mktime(&t_tm);
+	int end_time = standard_to_stamp("2024-06-07 0:0:0");
+	int days = (end_time - start_time) / 24.0 / 60 / 60;
+	initgraph(zX, zY, EW_SHOWCONSOLE | EW_NOCLOSE);
+	HWND hWnd = GetHWnd();
+	SetWindowPos(hWnd, HWND_TOPMOST, pX, pY, zX, zY, SWP_SHOWWINDOW);
+	putimage(0,-10, &background);
+
+	settextcolor(YELLOW);
+	//settextstyle(0,20, FW_ULTRALIGHT);
+	LOGFONT f;
+	gettextstyle(&f);						// 获取当前字体设置
+	f.lfHeight = 88;						// 设置字体高度为 48
+	f.lfWidth = 50;
+	_tcscpy(f.lfFaceName, _T("黑体"));		// 设置字体为“黑体”(高版本 VC 推荐使用 _tcscpy_s 函数)
+	f.lfQuality = ANTIALIASED_QUALITY;		// 设置输出效果为抗锯齿  
+	settextstyle(&f);						// 设置字体样式
+
+
+	TCHAR shengyutianshu[20];
+	_stprintf_s(shengyutianshu, _T(" %d "), days);
+	outtextxy(4, 60, shengyutianshu);
+	
+	Sleep(2000);
+	while (1)
+	{
+		msmsg = getmessage(EM_MOUSE | EM_KEY);
+		switch (msmsg.message)
+			case WM_LBUTTONDOWN:
+		{
+               for (int i = 0; i < 400; i++)
+	               {
+		                  SetWindowPos(hWnd, HWND_TOPMOST, pX+i, pY, zX, zY, SWP_SHOWWINDOW);
+		                  Sleep(1);
+	               }
+			   pX = pX + 400;
+			   Sleep(3000);
+			   for (int i = 0; i < 400; i++)
+			   {
+				   SetWindowPos(hWnd, HWND_TOPMOST, pX - i, pY, zX, zY, SWP_SHOWWINDOW);
+				   Sleep(1);
+			   }
+			   pX = pX - 400;
+		}
+	   
+
+	}
+
+	//cout << "距离高考还有" << days << "天" << endl;
+	system("pause");
+	return 0;
+}

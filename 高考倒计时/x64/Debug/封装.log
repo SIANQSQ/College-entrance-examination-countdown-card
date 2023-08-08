@@ -1,0 +1,4 @@
+﻿  封装.cpp
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\VS\include\graphics.h(1,1): warning C4828: 文件包含在偏移 0x19d3 处开始的字符，该字符在当前源字符集中无效(代码页 936)。
+C:\Users\HiteVision\Desktop\高考倒计时\封装.cpp(45,11): warning C4244: “初始化”: 从“double”转换到“int”，可能丢失数据
+  封装.vcxproj -> C:\Users\HiteVision\Desktop\高考倒计时\x64\Debug\封装.exe
